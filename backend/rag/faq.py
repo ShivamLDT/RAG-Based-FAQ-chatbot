@@ -17,7 +17,7 @@ class FAQRagSystem:
         self.vector_store_manager = VectorStoreManager(vector_db_path, collection_name)
         self.llm = ChatOpenAI(
             model="gpt-3.5-turbo",
-            temperature=0.3
+            temperature=0.2
         )
         self.qa_chain = None
         self.intents_data = None
@@ -162,8 +162,7 @@ class FAQRagSystem:
 
     def _create_qa_chain(self) -> None:
         """Create the QA chain using modern LCEL syntax"""
-        template = template = """You are a helpful medical clinic assistant. 
-Use the provided context as your main reference, but you may paraphrase or expand it naturally.
+        template = """You are a helpful medical clinic assistant. Answer questions concisely and directly.
 
 Context:
 {context}
@@ -171,12 +170,12 @@ Context:
 Question: {question}
 
 Instructions:
-- You may rephrase or elaborate using general clinic knowledge.
-- If the context is insufficient, politely mention that and give general advice.
-- Keep the tone friendly and conversational.
+- Keep answers brief and to the point (2-4 sentences maximum)
+- Use bullet points for lists or multiple items
+- If context is insufficient, give a short response directing them to contact the clinic
+- Be friendly but concise , always professional redirect to clinic for complex queries
 
 Answer:"""
-
 
         prompt = PromptTemplate(
             template=template,
